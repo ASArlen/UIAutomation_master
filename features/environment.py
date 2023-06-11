@@ -1,5 +1,10 @@
+import time
+from allure_behave.hooks import allure_report
+from allure_commons._allure import attach
+from allure_commons.types import AttachmentType
 from selenium import webdriver
-
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from features.browser import Browser
 from features.pages.test1_page import test1
 
@@ -22,6 +27,39 @@ def before_feature(context,feature):
 
 def after_all(context):
     try:
-        context.browser.close()
+        context.browser.cur.close()
+    except BaseException:
+        pass
+
+    try:
+        context.browser.quit()
+    except BaseException:
+        pass
+    # ScreenRecorder.stoprecord(ScreenRecorder())
+
+
+def before_step(context, step):
+    try:
+        attach(context.browser.driver.get_screenshot_as_png(), name="ScreenShot", attachment_type=AttachmentType.PNG)
+    except BaseException:
+        pass
+
+def after_step(context, step):
+    try:
+        attach(context.browser.driver.get_screenshot_as_png(), name="ScreenShot", attachment_type=AttachmentType.PNG)
+    except BaseException:
+        pass
+
+def after_feature(context, feature):
+    context.browser.driver.switch_to.default_content()
+    try:
+        for i in range(10):
+            WebDriverWait(context.browser.driver, 60, 0.5).until(
+                EC.element_to_be_clickable((By.XPATH, '(//span[@class="iconCloseSmall"])[1]'))).click()
+            time.sleep(5)
+    except:
+        print('No more close buttons')
+    try:
+        context.browser.quit()
     except BaseException:
         pass
