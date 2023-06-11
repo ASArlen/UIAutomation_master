@@ -51,9 +51,9 @@ def after_step(context, step):
     except BaseException:
         pass
 
-def after_feature(context,feature):
-    context.browser.driver.switch_to.default_content()
-    try:
-        context.browser.quit()
-    except BaseException:
-        pass
+# def after_feature(context,feature):
+#     context.browser.driver.switch_to.default_content()
+#     try:
+#         context.browser.quit()
+#     except BaseException:
+#         pass
